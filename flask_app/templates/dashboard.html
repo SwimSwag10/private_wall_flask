@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+  <title>Dojo Results</title>
+</head>
+<body>
+  <div id="header" class="row dashboard-style">
+    <h1 class="">Coding Dojo Wall</h1>
+    <div class="info">
+      <h2 class="">Welcome, {{ results.first_name }}:</h2>
+      <a href="/logout"><p class="btn btn-primary">Log Out</p></a>
+    </div>
+  </div>
+  <div class="row dashboard-content">
+    <div class="col dashboard-style">
+      <h2 class="row">#### Message(s) for You</h2>
+      <hr class="mb-4">
+      <div class="row">
+        {# <!-- {% for message in messages_to_user %}
+          <p>{{ user.name }} said:</p>
+          <p>{{ message.user }}</p>
+          <form action="/delete/message/{{ message.id }}" method="post">
+            <input type="hidden" name="message">
+          </form>
+          <a href="/message/delete/{{ message.id }}"><img src=""></a>
+        {% endfor %} --> #}
+      </div>
+    </div>
+    <div class="col dashboard-style">
+      <h2 class="row">Send Messages</h2>
+      <hr class="mb-4">
+      {# <!-- {% for friend in user.friends.id %}
+        <div class="row">
+          <p class="col">{{ user.friend.name }}</p>
+          <form action="/create/message" method="post">
+            <textarea name="message" cols="30" rows="10"></textarea>
+            <input type="hidden" name="recipient_id" value="{{ message.id }}">
+            <input type="submit" value="Send">
+          </form>
+        </div>
+      {% endfor %} --> #}
+    </div>
+  </div>
+</body>
+</html>
