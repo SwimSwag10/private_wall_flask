@@ -18,32 +18,32 @@
   </div>
   <div class="row dashboard-content">
     <div class="col dashboard-style">
-      <h2 class="row">#### Message(s) for You</h2>
-      <hr class="mb-4">
+      <h2 class="row">{{ message_count }} Message(s) for You</h2>
+      <hr class="mb-4 row">
       <div class="row">
-        {# <!-- {% for message in messages_to_user %}
-          <p>{{ user.name }} said:</p>
-          <p>{{ message.user }}</p>
-          <form action="/delete/message/{{ message.id }}" method="post">
-            <input type="hidden" name="message">
-          </form>
-          <a href="/message/delete/{{ message.id }}"><img src=""></a>
-        {% endfor %} --> #}
+         {% for message in all_messages %}
+          <p>{{ message.sender_name }} said:</p>
+          <p>{{ message.content }}</p>
+          <a href="/delete/message/{{ message.id }}"><p class="btn-sm btn-primary">delete</p></a>
+        {% endfor %}
       </div>
     </div>
     <div class="col dashboard-style">
       <h2 class="row">Send Messages</h2>
-      <hr class="mb-4">
-      {# <!-- {% for friend in user.friends.id %}
+      <hr class="mb-4 row">
+      <!-- displaying all the users and a way to create a message to send that user -->
+      {% for user in all_users %}
         <div class="row">
-          <p class="col">{{ user.friend.name }}</p>
+          <p>{{ user.first_name }}#{{ user.id }}</p>
           <form action="/create/message" method="post">
-            <textarea name="message" cols="30" rows="10"></textarea>
-            <input type="hidden" name="recipient_id" value="{{ message.id }}">
-            <input type="submit" value="Send">
+            <textarea name="content" cols="30" rows="3"></textarea>
+            <input type="hidden" name="recipient_id" value="{{ user.id }}">
+            <input type="hidden" name="user_id" value="{{ session['user_id'] }}">
+            <input type="submit" value="Send" class="btn-sm btn-warning">
           </form>
         </div>
-      {% endfor %} --> #}
+      {% endfor %}
+
     </div>
   </div>
 </body>

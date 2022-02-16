@@ -12,6 +12,8 @@ class User:
     self.password = data['password']
     self.created_at = data['created_at']
     self.updated_at = data['updated_at']
+    # this is for storing the tweets that the user has made
+    self.tweets = []
 
   @classmethod
   def save(cls,data):
@@ -36,8 +38,52 @@ class User:
     return cls(results[0])
 
   @classmethod
-  def get_by_id(cls,data): # why does this route EXIST!!!
+  def get_by_id(cls,data):
     query = "SELECT * FROM users WHERE id = %(id)s;"
+    results = connectToMySQL('wall_schema').query_db(query,data)
+    print(results[0])
+    return cls(results[0])
+
+  @classmethod
+  def get_name_by_id(cls,data):
+    data = {
+      "id" : data
+    }
+    query = "SELECT * FROM users WHERE id = %(id)s;"
+    results = connectToMySQL('wall_schema').query_db(query,data)
+    return cls(results[0]).first_name
+
+
+  @classmethod
+  def get_all_messages_with_creator(cls):
+    # Get all tweets, and their one associated User that created it
+    query = "SELECT * FROM messages JOIN users ON messages.user_id = users.id;"
+    results = connectToMySQL('wall_schema').query_db(query)
+    all_tweets = []
+    for row in results:
+      one_tweet = cls(row)
+      one_tweets_author_info = {
+        "id": row['users.id'], 
+        "first_name": row['first_name'],
+        "last_name": row['last_name'],
+        "email": row['email'],
+        "password": row['password'],
+        "created_at": row['users.created_at'],
+        "updated_at": row['users.updated_at']
+      }
+      author = User(one_tweets_author_info)
+      # Associate the Tweet class instance with the User class instance by filling in the empty creator attribute in the Tweet class
+      one_tweet.creator = author
+      # Append the Tweet containing the associated User to your list of tweets
+      all_tweets.append(one_tweet)
+    return all_tweets
+  
+  @classmethod
+  def message_number(cls, data):
+    data = {
+      "id" : data
+    }
+    query = "UPDATE users SET sent_messages=sent_messages + 1 WHERE id = %(id)s;"
     results = connectToMySQL('wall_schema').query_db(query,data)
     return cls(results[0])
 
@@ -62,7 +108,7 @@ class User:
       is_valid = False
     # -------------------------------- validating password --------------------------------
     if user['password'] != user['password_confirm']:
-      flash ("Confirm Password does not match Password", 'password')
+      flash ("Confirm Password does not match Password", 'password') # the second instance in this flash function is for the category.
       is_valid = False
 
     return is_valid

@@ -1,6 +1,7 @@
 from flask import render_template,request, redirect, flash, session
 from flask_app import app
-from flask_app.models.email import User
+from flask_app.models.user import User
+from flask_app.models.message import Message
 from flask_bcrypt import Bcrypt
 bcrypt = Bcrypt(app)
 
@@ -13,6 +14,7 @@ def create():
   data ={ 
     "first_name": request.form['first_name'],
     "last_name": request.form['last_name'],
+    # "username": request.form['username'],
     "email": request.form['email'],
     "password": bcrypt.generate_password_hash(request.form['password'])
   }
@@ -33,12 +35,12 @@ def show_info():
   data = {
     'id': session['user_id']
   }
-  return render_template('dashboard.html', results=User.get_by_id(data))
+  return render_template('dashboard.html', results=User.get_by_id(data), all_users=User.get_all(), all_messages=Message.get_by_id(data), message_count=len(Message.get_by_id(data)))
+  # all_the_tweets=Message.get_by_id(data)
 
 @app.route('/login',methods=['POST'])
 def login():
   user = User.get_one(request.form)
-
   # -------------------------------- validatting user email on login --------------------------------
   if not user:
     flash("Invalid Email","login")
@@ -48,7 +50,7 @@ def login():
     flash("Invalid Password","login")
     return redirect('/')
 
-  session['user_id'] = user.id # I'm not sure why this needs to be here
+  session['user_id'] = user.id
   return redirect('/dashboard')
 
 # UPDATE
